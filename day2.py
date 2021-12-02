@@ -13,12 +13,32 @@ def splitter(inst):
 
 instructions = map(splitter, lines)
 
-moves = {'up': np.array([0, -1]), 'down': np.array([0, 1]), 'forward': np.array([1, 0])}
 
-location = np.array([0, 0])
+def one(instructions):
 
-for direction, magnitude in instructions:
-    movement = moves[direction] * magnitude
-    location += movement
+    moves = {'up': np.array([0, -1]), 'down': np.array([0, 1]), 'forward': np.array([1, 0])}
 
-print(location.prod())
+    location = np.array([0, 0])
+
+    for direction, magnitude in instructions:
+        movement = moves[direction] * magnitude
+        location += movement
+    return location.prod()
+
+
+def two(instructions):
+
+    moves = {'up': -1, 'down': 1}
+
+    location = np.array([0, 0])
+    aim = 0
+
+    for direction, magnitude in instructions:
+        if direction in moves:
+            aim += moves[direction] * magnitude
+        else:
+            location += np.array([magnitude, magnitude * aim])
+    return location.prod()
+
+
+print(two(instructions))

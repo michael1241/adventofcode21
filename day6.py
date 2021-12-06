@@ -13,7 +13,6 @@ def nextDay(cnts):
     birthers = cnts[0]
     cnts.rotate(-1)
     cnts[6] += birthers
-    cnts[-1] = birthers
     return cnts
 
 

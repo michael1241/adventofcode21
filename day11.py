@@ -80,14 +80,22 @@ def step(d):
     return flashes
 
 
-for row in data:
-    print(row)
-print()
+def one(fd):
+    total_flashes = 0
+    for _ in range(100):
+        total_flashes += step(fd)
+    return total_flashes
 
-total_flashes = 0
-for _ in range(100):
-    total_flashes += step(flat_data)
-    for row in data:
-        print(row)
-    print()
-print(total_flashes)
+
+# print(one(flat_data))
+
+def two(fd):
+    steps = 0
+    while True:
+        step(fd)
+        steps += 1
+        if all(o.energy == 0 for o in fd):
+            return steps
+
+
+print(two(flat_data))

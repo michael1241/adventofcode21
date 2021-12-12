@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-with open('./day12in') as f:
+with open('day12in') as f:
     lines = [l.split('-') for l in f.read().splitlines()]
 
 graph = defaultdict(set)
@@ -12,25 +12,44 @@ for line in lines:
     graph[b].add(a)
 
 
-def isRepeatable(letter):
-    return letter.lower() != letter
+def canGoTo(vert, token, inPath):
+    if vert == 'start':
+        return False, token
+    if vert.isupper():
+        return True, token
+    if not inPath:
+        return True, token
+    if token:
+        return True, False
+    return False, False
 
 
-def findPaths(g, s, e, path=None):
-    path = [] if path == None else path
-    path = path + [s]
+def findPaths(g, s, e, inputpath, inputtoken=True):
+    localpath = inputpath + [s]
     if s == e:
-        return path
+        return localpath
     paths = []
     for vert in g[s]:
-        if vert not in path or isRepeatable(vert):
-            new_paths = findPaths(g, vert, e, path)
-            for p in new_paths:
-                paths.append(p)
+        inPath = vert in localpath
+        canvisit, token = canGoTo(vert, inputtoken, inPath)
+        if canvisit:
+            new_paths = findPaths(g, vert, e, localpath, token)
+            paths.extend(new_paths)
     return paths
 
 
-result = (findPaths(graph, 'start', 'end'))
+result = (findPaths(graph, 'start', 'end', []))
 
-# print(result)
 print(sum([1 for v in result if v == 'start']))
+
+size = len(result)
+'''
+idx_list = [idx + 1 for idx, val in
+            enumerate(result) if val == 'end']
+res = [result[i: j] for i, j in
+       zip([0] + idx_list, idx_list + 
+           ([size] if idx_list[-1] != size else []))]
+
+for i in res:
+    print(",".join(i))
+'''
